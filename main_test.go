@@ -1,10 +1,15 @@
-package main
+package httpresponse
 
 import (        
   "testing"
 )    
 
-func Test_main(t *testing.T) {
-  main()
-  t.Log("Testing")
+func Test_GetTime(t *testing.T) {
+  GetTime()
+  t.Log("Testing GetTime")
+}
+
+func Test_CronJob(t *testing.T) {
+  CronJob()
+  t.Log("Testing CronJob")
 }
