@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"net"
 	"net/http"
@@ -14,7 +13,7 @@ func main() {
 
 	resp, err := client.Get("https://gitlab.com")
 	if err != nil {
-		log.Fatalf("get error: %s: %s", err, url)
+		log.Fatalf("get error: %s: %s", err)
 	}
 	defer resp.Body.Close()
 
