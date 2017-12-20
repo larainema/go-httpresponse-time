@@ -1,14 +1,20 @@
-package main
+// package httpresponse to implement a application 
+// that will get HTTP response times over 5 minutes 
+// from your location to https://gitlab.com.
+
+package httpresponse
 
 import (
 	"log"
 	"net"
 	"net/http"
 	"time"
+	"github.com/robfig/cron"
 )
 
-func main() {
-	tp := newTransport()
+// get http response times
+func GetTime() {
+	tp := myTransport()
 	client := &http.Client{Transport: tp}
 
 	resp, err := client.Get("https://gitlab.com")
@@ -17,12 +23,31 @@ func main() {
 	}
 	defer resp.Body.Close()
 
-	log.Println("Duration:", tp.Duration())
-	log.Println("Request duration:", tp.ReqDuration())
-	log.Println("Connection duration:", tp.ConnDuration())
+	log.Println("Response Time:", tp.Duration())
+	log.Println("Connection Time:", tp.ConnDuration())
 
 }
 
+// run GetTime over 5 minis, run 60 mins 
+func CronJob() {
+	i := 0
+	c := cron.New()
+	c.Star()
+	defer c.Stop()
+	spec := "*/5 * * * * ?"
+	c.AddFunc(spec, func() {
+		i++
+		log.Println("cron running:", i)
+	})
+	c.Start()
+	
+	select{
+	case <-time.After(60):
+		return
+	}
+}
+
+// custom the Transport
 type customTransport struct {
 	rtp       http.RoundTripper
 	dialer    *net.Dialer
@@ -32,7 +57,7 @@ type customTransport struct {
 	reqEnd    time.Time
 }
 
-func newTransport() *customTransport {
+func myTransport() *customTransport {
 
 	tr := &customTransport{
 		dialer: &net.Dialer{
@@ -48,6 +73,7 @@ func newTransport() *customTransport {
 	return tr
 }
 
+// RoundTrip to get the start/end time of request
 func (tr *customTransport) RoundTrip(r *http.Request) (*http.Response, error) {
 	tr.reqStart = time.Now()
 	resp, err := tr.rtp.RoundTrip(r)
@@ -55,6 +81,7 @@ func (tr *customTransport) RoundTrip(r *http.Request) (*http.Response, error) {
 	return resp, err
 }
 
+// dial to get the start/end time of connection
 func (tr *customTransport) dial(network, addr string) (net.Conn, error) {
 	tr.connStart = time.Now()
 	cn, err := tr.dialer.Dial(network, addr)
@@ -62,14 +89,12 @@ func (tr *customTransport) dial(network, addr string) (net.Conn, error) {
 	return cn, err
 }
 
-func (tr *customTransport) ReqDuration() time.Duration {
-	return tr.Duration() - tr.ConnDuration()
-}
-
+// count the connect time
 func (tr *customTransport) ConnDuration() time.Duration {
 	return tr.connEnd.Sub(tr.connStart)
 }
 
+// count the response time
 func (tr *customTransport) Duration() time.Duration {
 	return tr.reqEnd.Sub(tr.reqStart)
 }
