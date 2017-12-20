@@ -33,7 +33,7 @@ func CronJob() {
 	i := 0
 	c := cron.New()
 	c.Start()
-	defer c.Stop()
+	//defer c.Stop()
 	spec := "*/5 * * * * ?"
 	c.AddFunc(spec, func() {
 		i++
