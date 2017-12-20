@@ -9,7 +9,6 @@ import (
 	"net"
 	"net/http"
 	"time"
-	"github.com/robfig/cron"
 )
 
 // get http response times
@@ -28,22 +27,13 @@ func GetTime() {
 
 }
 
-// run GetTime over 5 minis, run 60 mins 
+// run GetTime over 5 minis, and run 10 times 
 func CronJob() {
-	i := 0
-	c := cron.New()
-	c.Start()
-	//defer c.Stop()
-	spec := "*/5 * * * * ?"
-	c.AddFunc(spec, func() {
-		i++
-		log.Println("cron running:", i)
-	})
-	
-	select{
-	case <-time.After(60):
-		return
-	}
+	for i := 0; i < 10; i++ {
+		log.Println("Testing", i)
+		time.Sleep(10000 * time.Millisecond)
+    	}
+
 }
 
 // custom the Transport
