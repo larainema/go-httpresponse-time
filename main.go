@@ -30,8 +30,8 @@ func GetTime() {
 // run GetTime over 5 minis, and run 10 times 
 func CronJob() {
 	for i := 0; i < 10; i++ {
-		log.Println("Testing", i)
-		time.Sleep(10000 * time.Millisecond)
+		GetTime()
+		time.Sleep(5 * 60 * 1000 * time.Millisecond)
     	}
 
 }
