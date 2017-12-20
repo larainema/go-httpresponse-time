@@ -32,14 +32,13 @@ func GetTime() {
 func CronJob() {
 	i := 0
 	c := cron.New()
-	c.Star()
+	c.Start()
 	defer c.Stop()
 	spec := "*/5 * * * * ?"
 	c.AddFunc(spec, func() {
 		i++
 		log.Println("cron running:", i)
 	})
-	c.Start()
 	
 	select{
 	case <-time.After(60):
