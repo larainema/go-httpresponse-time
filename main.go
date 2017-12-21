@@ -35,6 +35,14 @@ func CronJob() {
     	}
 
 }
+// run GetTime over 10 seconds, and run 10 times 
+func CronJobShort() {
+	for i := 0; i < 10; i++ {
+		GetTime()
+		time.Sleep(10 * 1000 * time.Millisecond)
+    	}
+
+}
 
 // custom the Transport
 type customTransport struct {
