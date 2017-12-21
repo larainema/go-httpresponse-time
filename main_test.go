@@ -9,7 +9,7 @@ func Test_GetTime(t *testing.T) {
   t.Log("Testing GetTime")
 }
 
-func Test_CronJob(t *testing.T) {
-  CronJob()
-  t.Log("Testing CronJob")
+func Test_CronJobShort(t *testing.T) {
+  CronJobShort()
+  t.Log("Testing CronJobShort")
 }
